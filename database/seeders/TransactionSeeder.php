@@ -21,5 +21,13 @@ class TransactionSeeder extends Seeder
             'date' => now(),
             'name' => 'mcdo',
         ]);
+
+        transaction::create([
+            'user_id' => 2,  // Exemple d'utilisateur
+            'amount' => 10.50,
+            'type' => 'expense',  // 'revenue' ou 'expense'
+            'date' => now(),
+            'name' => 'pomme',
+        ]);
     }
 }

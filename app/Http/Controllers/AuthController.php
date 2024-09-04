@@ -132,4 +132,22 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out'], 200);
     }
+
+    public function destroy($id)
+{
+    // Récupérer l'utilisateur par son ID
+    $user = User::findOrFail($id);
+
+    // Supprimer l'utilisateur
+    $user->delete();
+
+    return response()->json([
+        'message' => 'Utilisateur et ses transactions ont été supprimés.'
+    ], 200);
 }
+
+
+
+
+}
+
