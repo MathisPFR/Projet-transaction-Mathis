@@ -5,53 +5,46 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use OpenApi\Annotations as OA;
 
-
-
-
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="API Endpoints for User Authentication"
+ * )
+ */
 class AuthController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Authentication"},
+     *     summary="Register a new user",
+     *     description="Creates a new user and returns an API token for authentication",
+     *     operationId="registerUser",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "password_confirmation"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="1|Q2I6gRmJffRTT3grZ7yYoNlA0MFmgfgtbiCNX9HJ")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation errors"
+     *     )
+     * )
      */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-
     public function register(Request $request)
     {
         $validatedData = $request->validate([
@@ -71,7 +64,34 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 201);
     }
 
-
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Authentication"},
+     *     summary="User login",
+     *     description="Authenticates a user and returns an API token",
+     *     operationId="loginUser",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User authenticated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="1|Q2I6gRmJffRTT3grZ7yYoNlA0MFmgfgtbiCNX9HJ")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials"
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -89,6 +109,23 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     tags={"Authentication"},
+     *     summary="Logout the user",
+     *     description="Revokes the current API token for the authenticated user",
+     *     operationId="logoutUser",
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logged out successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Logged out")
+     *         )
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

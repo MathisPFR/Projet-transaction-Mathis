@@ -16,9 +16,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/transactions', [TransactionController::class, 'index']);  // Voir toutes les transactions
-    Route::post('/transactions', [TransactionController::class, 'store']);  // Créer une nouvelle transaction
-    Route::get('/transactions/{id}', [TransactionController::class, 'show']);  // Voir une transaction spécifique
-    Route::put('/transactions/{id}', [TransactionController::class, 'update']);  // Mettre à jour une transaction
-    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);  // Supprimer une transaction
+    Route::get('/transactions', [TransactionController::class, 'index']); 
+    Route::post('/transactions', [TransactionController::class, 'store']);  
+    Route::get('/transactions/{id}', [TransactionController::class, 'show']);  
+    Route::put('/transactions/{id}', [TransactionController::class, 'update']);  
+    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);  
 });
